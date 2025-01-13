@@ -17,7 +17,6 @@ public class IndexModel : PageModel
     private static int count = 0;
     private readonly ICsvService csv;
     private readonly IPartsService partService;
-    public Env env { get; init; }
 
     public List<Part> PartsFromCsv { get; set; } = new();
     public List<Build> BuildsFromCsv { get; set; } = new();
@@ -26,15 +25,13 @@ public class IndexModel : PageModel
         IEmbeddedResourceQuery embeddedResourceQuery,
         ICsvService csvService,
         IPartsService part,
-        IDriver driver,
-        Env env
+        IDriver driver
     )
     {
         this.embeddedResourceQuery = embeddedResourceQuery;
         this.driver = driver;
         csv = csvService;
         this.partService = part;
-        this.env = env;
     }
 
     public void OnGet()
@@ -96,12 +93,12 @@ public class IndexModel : PageModel
     {
         var failure = Content(
             $"""
-                <div class='alert alert-error'>
-                    <p class='text-3xl text-warning text-sh'>
-                        An Error Occurred...  But fret not! Our team of intelligent lab mice are on the job!
-                    </p>
-                </div>
-            """
+                 <div class='alert alert-error'>
+                     <p class='text-3xl text-warning text-sh'>
+                         An Error Occurred...  But fret not! Our team of intelligent lab mice are on the job!
+                     </p>
+                 </div>
+             """
         );
 
         string query = "..."; // This can be ANY SQL query.  In my case, I'm using cypher, because it's lovely.
@@ -115,12 +112,12 @@ public class IndexModel : PageModel
         // This can also be a template, if we want, but here's a fancy-schmancy use of the triple-double quotes to easily send back anything in C# directly to HTML/X:
         return Content(
             $"""
-                <div class='alert alert-primary'>
-                    <p class='text-xl text-secondary text-sh'>
-                    {query}                           
-                    </p>
-                </div>
-            """
+                 <div class='alert alert-primary'>
+                     <p class='text-xl text-secondary text-sh'>
+                     {query}                           
+                     </p>
+                 </div>
+             """
         );
     }
 

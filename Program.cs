@@ -1,6 +1,7 @@
 using System.Reflection;
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Embeds;
+using CodeMechanic.FileSystem;
 using CodeMechanic.RazorHAT;
 using CodeMechanic.RazorHAT.Services;
 using CodeMechanic.Shargs;
@@ -8,28 +9,33 @@ using CodeMechanic.Types;
 using Hydro.Configuration;
 using nugsnet6;
 using nugsnet6.Services.Sqlite;
-using Serilog;
-using Serilog.Core;
 using ILogger = Serilog.ILogger;
 
 internal static class Program
 {
     static async Task Main(string[] args)
     {
-        foreach (var arg in args)
-        {
-            Console.WriteLine(arg);
-        }
+        DotEnv.Load();
 
         var arguments = new ArgsMap(args);
-        var logger = new LoggerConfiguration()
-            .MinimumLevel.Information()
-            .WriteTo.Console()
-            .WriteTo.File("./nugs/nugs.log",
-                rollingInterval: RollingInterval.Day,
-                rollOnFileSizeLimit: true
-            )
-            .CreateLogger();
+        if (arguments.HasFlag("--debug"))
+        {
+            // foreach (var arg in args)
+            // {
+            //     Console.WriteLine(arg);
+            // }
+
+            arguments.Dump(ignoreNulls: true);
+        }
+
+        // var logger = new LoggerConfiguration()
+        //     .MinimumLevel.Information()
+        //     .WriteTo.Console()
+        //     .WriteTo.File("./nugs/nugs.log",
+        //         rollingInterval: RollingInterval.Day,
+        //         rollOnFileSizeLimit: true
+        //     )
+        //     .CreateLogger();
 
         // arguments.Dump();
         (bool run_as_web, bool run_as_cli) = arguments.GetRunModes();
@@ -40,8 +46,8 @@ internal static class Program
         if (run_as_cli)
             await RunAsCli(arguments);
 
-        // if (run_as_web)
-        //     RunAsWeb(args, logger);
+        if (run_as_web)
+            RunAsWeb(args);
     }
 
     private static async Task RunAsCli(IArgsMap arguments)
@@ -63,16 +69,14 @@ internal static class Program
         return serviceProvider;
     }
 
-    static void RunAsWeb(string[] args, Logger logger)
+    static void RunAsWeb(string[] args)
     {
         Console.WriteLine(nameof(RunAsWeb));
         var builder = WebApplication.CreateBuilder(args);
 
-        // Load and inject .env files & values
-        Env env = DotEnv.Load();
-
         // Read .env values for setting up services
-        bool dev_mode = Environment.GetEnvironmentVariable("DEVMODE").ToBoolean();
+        bool dev_mode =
+            Environment.GetEnvironmentVariable("DEVMODE").ToBoolean();
         Console.WriteLine("Developer mode (all debugs enabled)? " + dev_mode);
 
         // Add services to the container.
@@ -84,13 +88,13 @@ internal static class Program
         // builder.Services.AddSingleton<IDriver, Neo4jDriver>();
 
         builder.Services.AddSingleton<IMarkdownService, MarkdownService>();
-        builder.Services.AddSingleton<ICsvService>(new CsvService(props_service, dev_mode));
-        builder.Services.AddSingleton<ISqliteInsightsService, SqliteInsightsService>();
+        builder.Services.AddSingleton<ICsvService>(
+            new CsvService(props_service, dev_mode));
+        builder.Services
+            .AddSingleton<ISqliteInsightsService, SqliteInsightsService>();
 
         builder.Services.AddScoped<IFakerService, FakerService>();
         builder.Services.AddScoped<IImageService, ImageService>();
-
-        builder.Services.AddSingleton(env);
 
         //  TODO: Fix the httpclient factory
         //  TODO: move to razorhat library
@@ -137,14 +141,15 @@ internal static class Program
         app.MapRazorPages();
         app.UseExceptionHandler();
 
-        app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+        app.MapControllerRoute(name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.UseHydro(builder.Environment);
 
         app.Run();
     }
 }
-
+ 
 public class Application
 {
     private readonly ILogger _logger;
@@ -156,6 +161,6 @@ public class Application
 
     public void Run()
     {
-        _logger.Information("Hello, World!");
+        // _logger.Information("Hello, World!");
     }
 }

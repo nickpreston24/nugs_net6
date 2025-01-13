@@ -7,9 +7,9 @@
 <div class="flex flex-column items-center gap-2">
     @foreach (var kvp in partial_views_dictionary)
     {
-        string partial_naem = kvp.Key;
+        string partial_name = kvp.Key;
         var partial_model_value = kvp.Value ?? default;
 
-        <partial name="@partial_naem" model="@partial_model_value"></partial>
+        <partial name="@partial_name" model="@partial_model_value"></partial>
     }
 </div>

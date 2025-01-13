@@ -24,6 +24,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@2.47.0/dist/full.css" rel="stylesheet" type="text/css"/>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/npm/tailwindcss-animated@1.1/src/index.min.js"></script>
 
     <!-- Alpine Plugins -->
     <script defer src='https://cdn.jsdelivr.net/npm/@@alpinejs/persist@3.x.x/dist/cdn.min.js'></script>
@@ -64,20 +65,20 @@
 <locknloadout-footer/>
 <hydro name="HydroModal"/>
 <script>
-document.addEventListener('alpine:init', () => {
-    Alpine.magic('post', function () {
-        return function (url, data = {}) {
-            return fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                redirect: 'follow',
-                body: JSON.stringify(data)
-            });
-        }
-    });
-})
+    document.addEventListener('alpine:init', () => {
+        Alpine.magic('post', function () {
+            return function (url, data = {}) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow',
+                    body: JSON.stringify(data)
+                });
+            }
+        });
+    })
 </script>
 
 

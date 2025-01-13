@@ -17,16 +17,16 @@
         .AddValidation(md => md.FilePath.IsNotEmpty());
 
     var markdown_stats = md_calc
-        .ComputeStats()
-        .With(x => x.Title = "Total Markdown Files")
+            .ComputeStats()
+            .With(x => x.Title = "Total Markdown Files")
         ;
 
     var parts_calc = new StatsCalculator<Part>(parts)
         .AddValidation(p => !(p.Cost < 0) && p.Name.IsNotEmpty());
 
     var parts_stats = parts_calc
-        .ComputeStats()
-        .With(x => x.Title = "Total Parts")
+            .ComputeStats()
+            .With(x => x.Title = "Total Parts")
         ;
 
     /*
@@ -46,7 +46,8 @@
     <div class="hero-content text-center">
         <div class="max-w-md">
             <h1 class="text-5xl font-bold">Sandbox 🏝️</h1>
-            <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+            <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
+                quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
             <!-- <button class="btn btn-primary">Get Started</button> -->
 
         </div>
