@@ -1,6 +1,7 @@
 using System.Reflection;
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Neo4j;
+using CodeMechanic.Neo4j.Extensions;
 using CodeMechanic.Reflection;
 using Neo4j.Driver;
 using nugsnet6.Models;
@@ -20,7 +21,7 @@ public class BuilderService : IBuilderService
     {
         string query = """
 
-            """;
+                       """;
 
         return 0;
     }
@@ -29,8 +30,8 @@ public class BuilderService : IBuilderService
     {
         var all_types = LowerPartType.GetAll<LowerPartType>();
         string query = """
-                MERGE ...
-            """;
+                           MERGE ...
+                       """;
         // TODO: run query.
 
         return 0;
@@ -291,8 +292,8 @@ public static class UpdatedNeo4JExtensions
         foreach (var prop in properties ?? Enumerable.Empty<PropertyInfo>())
         {
             string name =
-                prop.Name /*.Dump("key")*/
-            ;
+                    prop.Name /*.Dump("key")*/
+                ;
             // var value = node.Properties[name].Dump("value");
             node.Properties.TryGetValue(name, out var value);
 
