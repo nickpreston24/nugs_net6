@@ -1,7 +1,6 @@
 using System.Reflection;
 using CodeMechanic.Diagnostics;
 using CodeMechanic.Neo4j;
-using CodeMechanic.Neo4j.Extensions;
 using CodeMechanic.Reflection;
 using Neo4j.Driver;
 using nugsnet6.Models;
